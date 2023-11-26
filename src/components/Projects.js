@@ -1,19 +1,20 @@
-import React, {useState} from 'react'
+import React, {useContext, useState, useEffect} from 'react'
 import { CaretUp, Palette, PencilFill } from 'react-bootstrap-icons'
 import AddNewProject from './AddNewProject'
 import Project from './Project'
-
+import { TodoContext } from '../context'
 const Projects=()=>{
     const [showMenu, setShowMenu] = useState(true);
     const [edit, setEdit] = useState(false)
+    const [todos, setTodos]=useState([])
     const pencilColor = edit ? "#1EC94C" : "#000000"
 
-    const projects = [
-        { id : 1, name : "personal", numOfTodos : 0 },
-        { id : 2, name : "work", numOfTodos : 1 },
-        { id : 3, name : "other", numOfTodos : 2 }
-    ]
-
+    // const projects = [
+    //     { id : 1, name : "personal", numOfTodos : 0 },
+    //     { id : 2, name : "work", numOfTodos : 1 },
+    //     { id : 3, name : "other", numOfTodos : 2 }
+    // ]
+    const {projects}=useContext(TodoContext);
     return (
         <div className='Projects'>
             <div className="header">
@@ -23,6 +24,7 @@ const Projects=()=>{
                 </div>
                 <div className="btns">
                     {
+                        
                         showMenu && projects.length > 0 &&
                         <span className='edit' onClick={ () => setEdit(edit => !edit)}>
                             <PencilFill size="15" color={pencilColor}/>

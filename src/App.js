@@ -7,6 +7,7 @@ import Todos from './components/Todos';
 import Projects from './components/Projects';
 import Calendar from './components/Calendar';
 import User from './components/User';
+import { useContext } from 'react';
 function App() {
   return (
     <div className="App">

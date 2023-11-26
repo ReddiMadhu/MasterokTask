@@ -1,18 +1,52 @@
-import React, { useState } from "react";
+import React, { useState,useContext ,useEffect} from "react";
 import Model from "./Model";
-import {Bell, CalendarDay, Clock, Palette, X} from 'react-bootstrap-icons';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import dayjs, { Dayjs } from 'dayjs';
+import TodoForm from "./TodoForm";
+import { TodoContext } from '../context'
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import { calendarItems } from '../constants'
+import moment from 'moment'
+import randomcolor from 'randomcolor'
 
 const AddNewTodo=()=>{
+    const { selectedProject } = useContext(TodoContext)
+
     const [showModel,setShowModel]=useState(false);
     const [text,setText]=useState('');
     const [day,setDay]=useState(dayjs('2023-11-20T21:11:54'));
     const [time,setTime]=useState(dayjs('2023-11-20T21:11:54'));
+    const [todoProject, setTodoProject] = useState(selectedProject)
+    const projects = [
+        { id : 1, name : "personal", numOfTodos : 0 },
+        { id : 2, name : "work", numOfTodos : 1 },
+        { id : 3, name : "other", numOfTodos : 2 }
+    ]
 
+
+// Assuming day is a Day.js object
+    const handleSubmit = (e) => {
+
+        e.preventDefault();
+        if (text && !calendarItems.includes(todoProject)) {
+        addDoc(collection(db, 'todos'), {
+            text: text,
+            date: moment(day.toDate()).format('MM/DD/YYYY'),
+            day: moment(day.toDate()).format('d'),
+            time: time.format('hh:mm A'),
+            checked: false,
+            color: randomcolor(),
+            projectName: todoProject,
+            });
+        setShowModel(false);
+        setText('');
+        setDay(dayjs('2023-11-20T21:11:54'));
+        setTime(dayjs('2023-11-20T21:11:54'));
+        }
+    };
+    useEffect( () => {
+        setTodoProject(selectedProject)
+    }, [selectedProject])
     return(
         <div className="AddNewTodo">
         <div className="btn">
@@ -21,76 +55,21 @@ const AddNewTodo=()=>{
         </button>
         </div>
         <Model showModel={showModel} setShowModel={setShowModel}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <form>
-                <div className="text">
-                    <h3>Add New Todo!</h3>
-                    <input
-                        type="text"
-                        value={text}
-                        onChange={e=>setText(e.target.value)}
-                        placeholder="todo..."
-                        autoFocus
-                    />
-
-                </div>
-                <div className="remind">
-                    <Bell/>
-                    <p>Remind Me !</p>
-
-                </div>
-                <div className="pick-day">
-                    <div className="title">
-                        <CalendarDay/>  
-                        <p>Choose a Day</p>                 
-                        </div>
-                        <DesktopDatePicker
-                        label="Date"
-                        inputFormat="MM/DD/YYYY"
-                        value={day}
-                        onChange={day=>setDay(day)}
-                        />
-                </div>
-                <div className="pick-time">
-                    <div className="title">
-                        <Clock/>  
-                        <p>Choose a time</p>                 
-                        </div>
-                        <TimePicker
-                        label="Time"
-                        value={time}
-                        onChange={time=>setTime(time)}
-                        />
-                </div>
-                <div className="pick-project">
-                    <div className="title">
-                        <Palette/>  
-                        <p>Choose a project</p>                 
-                        </div>
-                    <div className="projects">
-                    <div className="project active">
-                        personal
-                    </div>
-                    <div className="project">
-                        work
-                    </div>
-                    <div className="project">
-                        work
-                    </div>
-                    <div className="project">
-                        work
-                    </div>
-                    </div>
-                </div>
-                <div className="cancel" onClick={()=>setShowModel(false)}>
-                    <X/>
-                </div>
-                <div className="confirm">
-                    <button>+ Add to do</button>
-                </div>
-            </form>
-            </LocalizationProvider>
-
+        <TodoForm
+                    handleSubmit={handleSubmit}
+                    heading='Add new to do!'
+                    text={text}
+                    setText={setText}
+                    day={day}
+                    setDay={setDay}
+                    time={time}
+                    setTime={setTime}
+                    todoProject={todoProject}
+                    setTodoProject={setTodoProject}
+                    projects={projects}
+                    showButtons={true}
+                    setShowModel={setShowModel}
+                />
         </Model>
         </div>
     )
