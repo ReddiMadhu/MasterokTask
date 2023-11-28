@@ -5,6 +5,8 @@ import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 import moment from 'moment';
 import { TodoContext } from '../context';
+
+
 function Todo({todo}){
     const [hover, setHover] = useState(false)
 
@@ -18,6 +20,7 @@ function Todo({todo}){
             setSelectedTodo(undefined)
         }
     }
+
     const deleteTodo = (todo) => {
             const todoRef = doc(db, 'todos', todo.id);
         
@@ -29,12 +32,14 @@ function Todo({todo}){
                 console.error('Error deleting todo:', error);
             });
     };
+
     const checkTodo = (todo) => {
         const todoRef = doc(db, 'todos', todo.id);
         updateDoc(todoRef, {
             checked: !todo.checked,
         });
     };
+
     const repeatNextDay = (todo) => {
         const nextDayDate = moment(todo.date, 'MM/DD/YYYY').add(1, 'days');
         const repeatedTodo = {
@@ -45,7 +50,8 @@ function Todo({todo}){
         };
         delete repeatedTodo.id;
         addDoc(collection(db, 'todos'), repeatedTodo);
-      };
+    };
+
     return (
         <div className='Todo'>
             <div

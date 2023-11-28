@@ -23,13 +23,13 @@ const AddNewTodo=()=>{
         { id : 3, name : "other", numOfTodos : 2 }
     ]
 
-
 // Assuming day is a Day.js object
     const handleSubmit = (e) => {
 
         e.preventDefault();
         if (text && !calendarItems.includes(todoProject)) {
         addDoc(collection(db, 'todos'), {
+            email:JSON.parse(localStorage.getItem('user')).email,
             text: text,
             date: moment(day.toDate()).format('MM/DD/YYYY'),
             day: moment(day.toDate()).format('d'),

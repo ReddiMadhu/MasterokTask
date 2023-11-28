@@ -1,81 +1,102 @@
 import { useState, useEffect } from 'react'
-import {collection,getDocs,onSnapshot} from "firebase/firestore";
+import {collection,getDocs,onSnapshot,query,where} from "firebase/firestore";
 import {db} from '../firebase';
 import moment from 'moment';
-export function useTodos(){
-//     const [todos, setTodos] = useState([])
+// export function useTodos(){
+// const [todos, setTodos] = useState([]);
 
-//     useEffect(() => {
-//         let unsubscribe = firebase
-//         .firestore()
-//         .collection('todos')
-//         .onSnapshot( snapshot => {
-//             const data = snapshot.docs.map( doc => {
-//                 return {
-//                     id : doc.id,
-//                     ...doc.data()
-//                 }
-//             })
-//             setTodos(data)
-//         })
+// useEffect(() => {
+//   const unsubscribe = onSnapshot(collection(db, 'todos'), (snapshot) => {
+//     const data = snapshot.docs.map((doc) => {
+//       return {
+//         id: doc.id,
+//         ...doc.data(),
+//       };
+//     });
+//     setTodos(data);
+//   },[]);
 
-//         return () => unsubscribe()
-//     })
+//   return unsubscribe;
+// }, []);
 
-//     return todos
+// return todos;
+// };
+export function useTodos(userRole) {
+  const [todos, setTodos] = useState([]);
+  const user = JSON.parse(localStorage.getItem('user'));
+  var userEmail = "madhu269reddi@gmail.com";
+  if(user){
+    userEmail=user.email; 
+    // onSnapshot(query(collection(db, "Users"), where("email", "==", userEmail)), (snapshot) => {
+    //   const userDoc = snapshot.docs[0];
+    //   if (userDoc.exists) {
+    //     userRole = userDoc.data().role;
+    //     console.log("User role:", userRole);
+    //   } else {
+    //     console.log("User not found or does not have a role");
+    //   }
+    // });
+  }
+  // Assuming 'req' is available in your context
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(collection(db, "todos"), where("email", "==", userEmail)),
+      (snapshot) => {
+        const data = snapshot.docs.map((doc) => {
+        if (doc) { 
+          return {
+            id: doc.id,
+            ...doc.data(),
+            email: doc.email,
+          };
+        } else {
+          return null; // Return null if the doc object is null
+        }
+      });
+        setTodos(data);
+      }
+    );
+    const unisubscribe = onSnapshot(collection(db, 'todos'), (snapshot) => {
+          const data = snapshot.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          });
+          setTodos(data);
+        },[]);
+        console.log(userRole);
+    return userRole === "admin"? unisubscribe : unsubscribe;
+  }, [userEmail]);
+
+  return todos;
+}
+// export function useTodos() {
+//   const [todos, setTodos] = useState([]);
+//   const user = JSON.parse(localStorage.getItem('user'));
+//   const userEmail = user.email; // Assuming 'req' is available in your context
+
+//   useEffect(() => {
+//     const unsubscribe = onSnapshot(
+//       query(collection(db, "todos"), where("email", "==", userEmail)),
+//       (snapshot) => {
+//         const data = snapshot.docs.map((doc) => {
+//           return {
+//             id: doc.id,
+//             ...doc.data(),
+//           };
+//         });
+//         setTodos(data);
+//       }
+//     );
+//     return  unsubscribe;
+//   }, []);
+
+//   return todos;
 // }
-const [todos, setTodos] = useState([]);
-
-useEffect(() => {
-  const unsubscribe = onSnapshot(collection(db, 'todos'), (snapshot) => {
-    const data = snapshot.docs.map((doc) => {
-      return {
-        id: doc.id,
-        ...doc.data(),
-      };
-    });
-    setTodos(data);
-  },[]);
-
-  return unsubscribe;
-}, []);
-
-return todos;
-};
-
 export function useProjects(){
-//     const [projects, setProjects] = useState([])
-
-//     function calculateNumOfTodos(projectName, todos){
-//         return todos.filter( todo => todo.projectName === projectName).length
-//     }
-
-//     useEffect(() => {
-//         let unsubscribe = firebase
-//         .firestore()
-//         .collection('projects')
-//         .onSnapshot( snapshot => {
-//             const data = snapshot.docs.map( doc => {
-
-//                 const projectName = doc.data().name
-
-//                 return {
-//                     id : doc.id,
-//                     name : projectName,
-//                     numOfTodos : calculateNumOfTodos(projectName, todos)
-//                 }
-//             })
-//             setProjects(data)
-//         })
-
-//         return () => unsubscribe()
-//     })
-
-//     return projects
-// }
 const [projects, setProjects] = useState([]);
 
-  
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'projects'), (snapshot) => {
       const data = snapshot.docs.map((doc) => {

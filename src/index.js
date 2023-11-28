@@ -1,16 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import App from './App.js';
 import { TodoContextProvider } from './context';
+import Protected from './components/Protected';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+  Route,
+} from "react-router-dom";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<App />}>
+      <Route path="signup" element={<Signup />} />
+      <Route path="login" element={<Login />} />
+      <Route path="/" element={<Protected />} >
+        <Route path="/" index element={<Home />} />
+      </Route>
+    </Route>
+  )
+);
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
   <TodoContextProvider
-
-
   >  
-    <App />
+      <RouterProvider router={router} />
+
     </TodoContextProvider>
   </React.StrictMode>
 );
