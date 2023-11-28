@@ -10,7 +10,7 @@ import { TodoContext } from '../context';
 function Todo({todo}){
     const [hover, setHover] = useState(false)
 
-    const { selectedTodo, setSelectedTodo } = useContext(TodoContext);
+    const { selectedTodo, setSelectedTodo,userRole } = useContext(TodoContext);
 
 
     const handleDelete = todo => {
@@ -51,7 +51,7 @@ function Todo({todo}){
         delete repeatedTodo.id;
         addDoc(collection(db, 'todos'), repeatedTodo);
     };
-
+    const name=todo.name;
     return (
         <div className='Todo'>
             <div
@@ -72,7 +72,8 @@ function Todo({todo}){
                     }
                 </div>
                 <div className="text" onClick={()=>{setSelectedTodo(todo)}}>
-                    <p style={{color : todo.checked ? '#bebebe' : '#000000'}}>{todo.text}</p>
+                    
+                    <p style={{color : todo.checked ? '#bebebe' : '#000000'}}>{userRole === 'admin' && name ? <h5>{name}</h5> : ''} {todo.text}</p>
                     <span>{todo.time} - {todo.projectName}</span>
                     <div className={`line ${todo.checked ? 'line-through' : ''}`}></div>
                 </div>

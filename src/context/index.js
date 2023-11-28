@@ -23,7 +23,8 @@ function TodoContextProvider({children}){
                     projects:projectsWithStats,
                     selectedTodo,
                     setSelectedTodo,
-                    setUserRole
+                    setUserRole,
+                    userRole
                 }
             }
         >

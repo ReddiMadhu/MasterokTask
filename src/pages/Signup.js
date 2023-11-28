@@ -4,6 +4,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import './Login.css';
+
 const Signup = () => {
 
     const [email, setEmail] = useState('');
@@ -34,7 +36,7 @@ const Signup = () => {
     }
 
     return (
-        <div>
+        <div className='login2'>
         <h1>Signup Page</h1>
         <form onSubmit={handleSubmit} className='signup-form'>
             <input

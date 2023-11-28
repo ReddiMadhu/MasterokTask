@@ -3,7 +3,7 @@ import Model from "./Model";
 import dayjs, { Dayjs } from 'dayjs';
 import TodoForm from "./TodoForm";
 import { TodoContext } from '../context'
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc,getDocs,query,where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { calendarItems } from '../constants'
 import moment from 'moment'
@@ -24,25 +24,62 @@ const AddNewTodo=()=>{
     ]
 
 // Assuming day is a Day.js object
-    const handleSubmit = (e) => {
+    // const handleSubmit = (e) => {
 
+    //     e.preventDefault();
+
+    //     if (text && !calendarItems.includes(todoProject)) {
+    //     addDoc(collection(db, 'todos'), {
+    //         email:JSON.parse(localStorage.getItem('user')).email,
+    //         name:"",
+    //         text: text,
+    //         date: moment(day.toDate()).format('MM/DD/YYYY'),
+    //         day: moment(day.toDate()).format('d'),
+    //         time: time.format('hh:mm A'),
+    //         checked: false,
+    //         color: randomcolor(),
+    //         projectName: todoProject,
+    //         });
+    //     setShowModel(false);
+    //     setText('');
+    //     setDay(dayjs('2023-11-20T21:11:54'));
+    //     setTime(dayjs('2023-11-20T21:11:54'));
+    //     }
+    // };
+    const handleSubmit = async (e) => {
         e.preventDefault();
+      
         if (text && !calendarItems.includes(todoProject)) {
-        addDoc(collection(db, 'todos'), {
-            email:JSON.parse(localStorage.getItem('user')).email,
-            text: text,
-            date: moment(day.toDate()).format('MM/DD/YYYY'),
-            day: moment(day.toDate()).format('d'),
-            time: time.format('hh:mm A'),
-            checked: false,
-            color: randomcolor(),
-            projectName: todoProject,
-            });
-        setShowModel(false);
-        setText('');
-        setDay(dayjs('2023-11-20T21:11:54'));
-        setTime(dayjs('2023-11-20T21:11:54'));
-        }
+          // Fetch username from Users collection
+          const querySnapshot = await getDocs(query(collection(db, "Users"), where("email", "==",JSON.parse(localStorage.getItem('user')).email)));
+    
+         
+              const userDoc = querySnapshot.docs[0];
+              const username = userDoc.data().name;
+              
+          
+        
+            // Add username to todo object
+            const todoData = {
+                email: JSON.parse(localStorage.getItem('user')).email,
+                name: username,
+                text: text,
+                date: moment(day.toDate()).format('MM/DD/YYYY'),
+                day: moment(day.toDate()).format('d'),
+                time: time.format('hh:mm A'),
+                checked: false,
+                color: randomcolor(),
+                projectName: todoProject,
+            };
+        
+          // Add todo to Firestore database
+            await addDoc(collection(db, 'todos'), todoData);
+      
+            setShowModel(false);
+            setText('');
+            setDay(dayjs('2023-11-20T21:11:54'));
+            setTime(dayjs('2023-11-20T21:11:54'));
+            }
     };
     useEffect( () => {
         setTodoProject(selectedProject)
