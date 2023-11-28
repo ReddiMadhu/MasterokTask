@@ -9,11 +9,7 @@ const Projects=()=>{
     const [todos, setTodos]=useState([])
     const pencilColor = edit ? "#1EC94C" : "#000000"
 
-    // const projects = [
-    //     { id : 1, name : "personal", numOfTodos : 0 },
-    //     { id : 2, name : "work", numOfTodos : 1 },
-    //     { id : 3, name : "other", numOfTodos : 2 }
-    // ]
+
     const {projects}=useContext(TodoContext);
     return (
         <div className='Projects'>

@@ -27,15 +27,7 @@ export function useTodos(userRole) {
   var userEmail = "madhu269reddi@gmail.com";
   if(user){
     userEmail=user.email; 
-    // onSnapshot(query(collection(db, "Users"), where("email", "==", userEmail)), (snapshot) => {
-    //   const userDoc = snapshot.docs[0];
-    //   if (userDoc.exists) {
-    //     userRole = userDoc.data().role;
-    //     console.log("User role:", userRole);
-    //   } else {
-    //     console.log("User not found or does not have a role");
-    //   }
-    // });
+
   }
   // Assuming 'req' is available in your context
   useEffect(() => {

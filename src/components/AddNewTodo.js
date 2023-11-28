@@ -23,29 +23,6 @@ const AddNewTodo=()=>{
         { id : 3, name : "other", numOfTodos : 2 }
     ]
 
-// Assuming day is a Day.js object
-    // const handleSubmit = (e) => {
-
-    //     e.preventDefault();
-
-    //     if (text && !calendarItems.includes(todoProject)) {
-    //     addDoc(collection(db, 'todos'), {
-    //         email:JSON.parse(localStorage.getItem('user')).email,
-    //         name:"",
-    //         text: text,
-    //         date: moment(day.toDate()).format('MM/DD/YYYY'),
-    //         day: moment(day.toDate()).format('d'),
-    //         time: time.format('hh:mm A'),
-    //         checked: false,
-    //         color: randomcolor(),
-    //         projectName: todoProject,
-    //         });
-    //     setShowModel(false);
-    //     setText('');
-    //     setDay(dayjs('2023-11-20T21:11:54'));
-    //     setTime(dayjs('2023-11-20T21:11:54'));
-    //     }
-    // };
     const handleSubmit = async (e) => {
         e.preventDefault();
       

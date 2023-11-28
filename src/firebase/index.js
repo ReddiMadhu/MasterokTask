@@ -3,10 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 import {getAuth, GoogleAuthProvider} from 'firebase/auth'
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCOVKr-sriMB1qKKX0pADU_2TkTuxa2wDo",
   authDomain: "todo-app-4786a.firebaseapp.com",
